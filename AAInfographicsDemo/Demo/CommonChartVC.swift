@@ -406,5 +406,25 @@ extension CommonChartVC: AAChartViewDelegate {
             """
         )
     }
+    func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel) {
+        
+        print(
+            """
+            
+            selected series element name: \(seriesSelectionMessage.name ?? "")
+            🔥🔥🔥WARNING!!!!!!!!!!!!!!!!!!!! Series Visibility Change Message !!!!!!!!!!!!!!!!!!!! WARNING🔥🔥🔥
+            ==========================================================================================
+            ------------------------------------------------------------------------------------------
+            user finger moved over!!!,get the move over event message: {
+            seriesEnabled = \(String(describing: seriesSelectionMessage.seriesEnabled));
+            }
+            ------------------------------------------------------------------------------------------
+            ==========================================================================================
+            🔥🔥🔥WARNING!!!!!!!!!!!!!!!!!!!! Series Visibility Change Message !!!!!!!!!!!!!!!!!!!! WARNING🔥🔥🔥
+            
+            """
+        )
+        
+    }
 }
 

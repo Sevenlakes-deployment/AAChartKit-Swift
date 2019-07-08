@@ -23,8 +23,10 @@
         <div id="container" style="width:100%; height: 100%;"></div>
         <script>
             var aaGlobalChart;
+            var isiOSWebKit;
             function loadTheHighChartView(sender, receivedWidth, receivedHeight,isWKWebView) {
                 var aaOptions = JSON.parse(sender);
+                isiOSWebKit = isWKWebView
                 var o = document.getElementById('container'); //获得元素
                 if (receivedWidth != 0) {
                     o.style.width = receivedWidth; //设置宽度
@@ -58,7 +60,6 @@
                         configureChartTouchEvent(aaOptions,isWKWebView);
                     }
                 }
-                
                 if (aaOptions.tooltip) {
                     if (aaOptions.tooltip.formatter) {
                         aaOptions.tooltip.formatter = eval(aaOptions.tooltip.formatter);
@@ -69,7 +70,7 @@
         
         function configureChartTouchEvent(aaOptions,isWKWebView) {
             var mouseOverFunc = function(){
-                //console.log(this)
+                console.log(this)
                 var message = {
                     name: this.series.name,
                     y :this.y,
@@ -80,9 +81,11 @@
                 };
                 if (isWKWebView == true) {
                     window.webkit.messageHandlers.mouseover.postMessage(message);
+                    console.log(">>>>>> WebKit");
                 } else {
                     var messageStr = JSON.stringify(message);
                     uiWebViewLoadURL("mouseover://?"+ messageStr);
+                    console.log(">>>>>> Webview");
                 }
                 
             };
@@ -96,6 +99,21 @@
             }
             aaOptions.plotOptions.series = Object.assign(pointEvents,aaOptions.plotOptions.series)
         }
+        
+        function configureSeriesTouchEvent(seriesName, seriesEnabled) {
+            console.log(this)
+            var message = {
+                name: seriesName,
+                seriesEnabled :seriesEnabled,
+            };
+            if (isiOSWebKit == true) {
+                window.webkit.messageHandlers.legendItemClick.postMessage(message);
+            } else {
+                var messageStr = JSON.stringify(message);
+                uiWebViewLoadURL("legendItemClick://?"+ messageStr);
+            }
+        }
+        
         
         function uiWebViewLoadURL(url) {
             var iFrame;
@@ -137,6 +155,7 @@
         
         
         function setChartSeriesHidden(hidden) {
+            console.log(">>>>>> WebKit series hidden");
             for (var i = 0; i < aaGlobalChart.series.length; i++) {
                 var series = aaGlobalChart.series[i];
                 if (hidden == true) {
@@ -148,11 +167,13 @@
         }
         
         function showTheSeriesElementContentWithIndex(elementIndex) {
+            console.log(">>>>>> WebKit series show");
             var series = aaGlobalChart.series[elementIndex];
             series.show()
         }
         
         function hideTheSeriesElementContentWithIndex(elementIndex) {
+            console.log(">>>>>> WebKit series Hide");
             var series = aaGlobalChart.series[elementIndex];
             series.hide()
         }
