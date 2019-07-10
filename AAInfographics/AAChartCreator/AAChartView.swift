@@ -36,13 +36,13 @@ import WebKit
 let kUserContentMessageNameMouseOver = "mouseover"
 let kUserContentMessageSeriesSelection = "legendItemClick"
 
-@objc public protocol AAChartViewDelegate: NSObjectProtocol {
-    @objc optional func aaChartViewDidFinishedLoad (_ aaChartView: AAChartView)
-    @objc optional func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel)
-    @objc optional func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel)
+public protocol AAChartViewDelegate: NSObjectProtocol {
+    func aaChartViewDidFinishedLoad (_ aaChartView: AAChartView)
+    func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel)
+    func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel)
 }
 
-public class AAMoveOverEventMessageModel: NSObject {
+@objc public class AAMoveOverEventMessageModel: NSObject {
     var name: String?
     var x: Float?
     var y: Float?
@@ -346,7 +346,7 @@ extension AAChartView: WKUIDelegate {
 extension AAChartView:  WKNavigationDelegate {
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         drawChart()
-        self.delegate?.aaChartViewDidFinishedLoad?(self)
+        self.delegate?.aaChartViewDidFinishedLoad(self)
     }
 }
 
@@ -355,11 +355,11 @@ extension AAChartView: WKScriptMessageHandler {
         if message.name == kUserContentMessageNameMouseOver {
             let messageBody = message.body as! [String: Any]
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, moveOverEventMessage: eventMessageModel)
         }else if message.name == kUserContentMessageSeriesSelection {
             let messageBody = message.body as! [String: Any]
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, seriesSelectionMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, seriesSelectionMessage: eventMessageModel)
         }
     }
 }
@@ -367,7 +367,7 @@ extension AAChartView: WKScriptMessageHandler {
 extension AAChartView: UIWebViewDelegate {
     open func webViewDidFinishLoad(_ webView: UIWebView) {
         drawChart()
-        self.delegate?.aaChartViewDidFinishedLoad?(self)
+        self.delegate?.aaChartViewDidFinishedLoad(self)
     }
     
     open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
@@ -379,7 +379,7 @@ extension AAChartView: UIWebViewDelegate {
             let decodedMessageStr = (messageStr?.removingPercentEncoding)!
             let messageBody = getDictionary(jsonString: decodedMessageStr)
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, moveOverEventMessage: eventMessageModel)
             return false
         }else if scheme == kUserContentMessageSeriesSelection {
             var messageStr = URL?.absoluteString
@@ -387,7 +387,7 @@ extension AAChartView: UIWebViewDelegate {
             let decodedMessageStr = (messageStr?.removingPercentEncoding)!
             let messageBody = getDictionary(jsonString: decodedMessageStr)
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, seriesSelectionMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, seriesSelectionMessage: eventMessageModel)
             return false
         }
         return true
