@@ -251,6 +251,8 @@ public class AAMarker: AASerializable {
         lineColor = prop
         return self
     }
+    public  init() {
+    }  
 }
 
 public class AAShadow: AASerializable {
