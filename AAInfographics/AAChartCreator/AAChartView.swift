@@ -43,13 +43,13 @@ public protocol AAChartViewDelegate: NSObjectProtocol {
 }
 
 @objc public class AAMoveOverEventMessageModel: NSObject {
-    var name: String?
-    var x: Float?
-    var y: Float?
-    var category: String?
-    var offset: [String: Any]?
-    var index: Int?
-    var seriesEnabled: Bool?
+    public var name: String?
+    public var x: Float?
+    public var y: Float?
+    public var category: String?
+    public var offset: [String: Any]?
+    public var index: Int?
+    public var seriesEnabled: Bool?
 }
 
 public class AAChartView: UIView {
