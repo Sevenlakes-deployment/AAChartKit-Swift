@@ -34,10 +34,12 @@ import UIKit
 import WebKit
 
 let kUserContentMessageNameMouseOver = "mouseover"
+let kUserContentMessageSeriesSelection = "legendItemClick"
 
 @objc public protocol AAChartViewDelegate: NSObjectProtocol {
     @objc optional func aaChartViewDidFinishLoad (_ aaChartView: AAChartView)
     @objc optional func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel)
+    @objc optional func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel)
 }
 
 public class AAMoveOverEventMessageModel: NSObject {
@@ -47,6 +49,7 @@ public class AAMoveOverEventMessageModel: NSObject {
     public var category: String?
     public var offset: [String: Any]?
     public var index: Int?
+    public var seriesEnabled: Bool?
 }
 
 public class AAChartView: WKWebView {
@@ -116,6 +119,7 @@ public class AAChartView: WKWebView {
     self.init(frame: .zero, configuration: configuration)
     
     configuration.userContentController.add(self, name: kUserContentMessageNameMouseOver)
+    configuration.userContentController.add(self, name: kUserContentMessageSeriesSelection)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -158,7 +162,8 @@ public class AAChartView: WKWebView {
     
     private func configureTheJavaScriptStringWithOptions(_ aaOptions: AAOptions) {
         let modelJsonStr = aaOptions.toJSON()!
-        optionsJson = "loadTheHighChartView('\(modelJsonStr)','\(contentWidth ?? 0)','\(contentHeight ?? 0)')"
+
+        optionsJson = "loadTheHighChartView('\(modelJsonStr)','\(contentWidth ?? 0)','\(contentHeight ?? 0)','\(self)')"
     }
 }
 
@@ -474,6 +479,11 @@ extension AAChartView: WKScriptMessageHandler {
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
             self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
         }
+        else if message.name == kUserContentMessageSeriesSelection {
+            let messageBody = message.body as! [String: Any]
+            let eventMessageModel = getEventMessageModel(messageBody: messageBody)
+            self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
+        }
     }
 }
 
@@ -486,6 +496,7 @@ extension AAChartView {
         eventMessageModel.category = messageBody["category"] as? String
         eventMessageModel.offset = messageBody["offset"] as? [String: Any]
         eventMessageModel.index = messageBody["index"] as? Int
+        eventMessageModel.seriesEnabled = messageBody["seriesEnabled"] as? Bool
         return eventMessageModel
     }
 }

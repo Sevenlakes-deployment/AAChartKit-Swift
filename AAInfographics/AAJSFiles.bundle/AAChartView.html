@@ -19,8 +19,10 @@
         <div id="container" style="width:100%; height: 100%;"></div>
         <script>
             let aaGlobalChart;
-            function loadTheHighChartView(sender, receivedWidth, receivedHeight) {
+            var isiOSWebKit;
+            function loadTheHighChartView(sender, receivedWidth, receivedHeight,isWKWebView) {
                 let aaOptions = JSON.parse(sender);
+                isiOSWebKit = isWKWebView
                 if (aaOptions.xAxisArray) {
                     aaOptions.xAxis = aaOptions.xAxisArray
                 }
@@ -97,7 +99,21 @@
             };
             aaPlotOptions.series.point = seriesPoint;
         }
-
+        
+        function configureSeriesTouchEvent(seriesName, seriesEnabled) {
+                  console.log(this)
+                  var message = {
+                      name: seriesName,
+                      seriesEnabled :seriesEnabled,
+                  };
+                  if (isiOSWebKit == true) {
+                      window.webkit.messageHandlers.legendItemClick.postMessage(message);
+                  } else {
+                      var messageStr = JSON.stringify(message);
+                      uiWebViewLoadURL("legendItemClick://?"+ messageStr);
+                  }
+              }
+        
         function configureOptionsFormatters(aaOptions) {
             if (aaOptions.tooltip
                 && aaOptions.tooltip.formatter) {
