@@ -106,12 +106,7 @@
                       name: seriesName,
                       seriesEnabled :seriesEnabled,
                   };
-                  if (isiOSWebKit == true) {
-                      window.webkit.messageHandlers.legendItemClick.postMessage(message);
-                  } else {
-                      var messageStr = JSON.stringify(message);
-                      uiWebViewLoadURL("legendItemClick://?"+ messageStr);
-                  }
+                  window.webkit.messageHandlers.legendItemClick.postMessage(message);
               }
         
         function configureOptionsFormatters(aaOptions) {
