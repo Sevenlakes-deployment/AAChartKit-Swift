@@ -33,6 +33,14 @@
 import UIKit
 
 class EvaluateJSStringFunctionVC: UIViewController, AAChartViewDelegate {
+    func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel) {
+        
+    }
+    
+    func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel) {
+        
+    }
+    
     public var sampleChartTypeIndex: NSInteger?
     
     private var aaChartView: AAChartView!    

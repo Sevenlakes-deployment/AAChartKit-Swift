@@ -33,7 +33,10 @@
 import UIKit
 
 class DoubleChartsLinkedWorkVC: UIViewController, AAChartViewDelegate {
-    
+   
+    func aaChartViewDidFinishLoad(_ aaChartView: AAChartView) {
+
+    }
     private var aaChartView1 = AAChartView()
     private var aaChartView2 = AAChartView()
     private var aaChartModel2 = AAChartModel()
@@ -135,6 +138,10 @@ class DoubleChartsLinkedWorkVC: UIViewController, AAChartViewDelegate {
             [AASeriesElement()
                 .data(configureSeriesDataArray())]
         )
+    }
+    
+    func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel) {
+        
     }
     
     private func getRandomNumbersArr(numbers: Int) -> [Float] {

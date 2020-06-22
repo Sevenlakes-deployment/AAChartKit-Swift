@@ -36,10 +36,10 @@ import WebKit
 let kUserContentMessageNameMouseOver = "mouseover"
 let kUserContentMessageSeriesSelection = "legendItemClick"
 
-@objc public protocol AAChartViewDelegate: NSObjectProtocol {
-    @objc optional func aaChartViewDidFinishLoad (_ aaChartView: AAChartView)
-    @objc optional func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel)
-    @objc optional func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel)
+public protocol AAChartViewDelegate: NSObjectProtocol {
+    func aaChartViewDidFinishLoad (_ aaChartView: AAChartView)
+    func aaChartView(_ aaChartView: AAChartView, moveOverEventMessage: AAMoveOverEventMessageModel)
+    func aaChartView(_ aaChartView: AAChartView, seriesSelectionMessage: AAMoveOverEventMessageModel)
 }
 
 public class AAMoveOverEventMessageModel: NSObject {
@@ -468,7 +468,7 @@ extension AAChartView: WKUIDelegate {
 extension AAChartView:  WKNavigationDelegate {
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         drawChart()
-        self.delegate?.aaChartViewDidFinishLoad?(self)
+        self.delegate?.aaChartViewDidFinishLoad(self)
     }
 }
 
@@ -477,12 +477,12 @@ extension AAChartView: WKScriptMessageHandler {
         if message.name == kUserContentMessageNameMouseOver {
             let messageBody = message.body as! [String: Any]
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, moveOverEventMessage: eventMessageModel)
         }
         else if message.name == kUserContentMessageSeriesSelection {
             let messageBody = message.body as! [String: Any]
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, seriesSelectionMessage: eventMessageModel)
+            self.delegate?.aaChartView(self, seriesSelectionMessage: eventMessageModel)
         }
     }
 }
