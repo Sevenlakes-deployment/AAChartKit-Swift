@@ -482,7 +482,7 @@ extension AAChartView: WKScriptMessageHandler {
         else if message.name == kUserContentMessageSeriesSelection {
             let messageBody = message.body as! [String: Any]
             let eventMessageModel = getEventMessageModel(messageBody: messageBody)
-            self.delegate?.aaChartView?(self, moveOverEventMessage: eventMessageModel)
+            self.delegate?.aaChartView?(self, seriesSelectionMessage: eventMessageModel)
         }
     }
 }
